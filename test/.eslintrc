@@ -6,7 +6,7 @@
   "rules": {
     "no-underscore-dangle": 0,
     "camelcase": 1,
-    "no-global-strict": 2,
+    "no-global-strict": 0,
     "strict": 0,
     "quotes": [2, "single"],
     "if-curly-formatting": 0,

@@ -47,7 +47,7 @@ rules:
   semi: 1
   block-scoped-var: 1
   no-alert: 1
-  no-console: 1
+  no-console: 0
   new-cap: 1
 
   # DISABLED

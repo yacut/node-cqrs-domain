@@ -2,6 +2,17 @@ var expect = require('expect.js'),
   uuid = require('uuid').v4,
   api = require('../../index');
 
+// precondition: dynalite is running
+// TODO: remove aws from test later
+  var AWS = require('aws-sdk');
+  AWS.config.update({
+    region: 'us-east-1',
+    accessKeyId: 'some-id',
+    secretAccessKey: 'some-secret',
+    endpoint: 'http://localhost:4567',
+  });
+//
+
 describe('integration', function () {
 
   describe('set 1', function () {
@@ -11,7 +22,13 @@ describe('integration', function () {
       var domain;
 
       before(function (done) {
-        domain = api({ domainPath: __dirname + '/fixture/set1', commandRejectedEventName: 'rejectedCommand', deduplication: {} });
+        domain = api({
+          domainPath: __dirname + '/fixture/set1',
+          eventStore: {type: 'dynamodb'},
+          aggregateLock:{type: 'dynamodb'},
+          commandRejectedEventName: 'rejectedCommand',
+          deduplication: {type: 'dynamodb'}
+        });
         domain.defineCommand({
           id: 'id',
           name: 'name',
