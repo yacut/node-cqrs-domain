@@ -3,7 +3,8 @@
 //
 // local setup:
 // http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.html
-// $ java -Djava.library.path=./DynamoDBLocal_lib -jar DynamoDBLocal.jar -inMemory -port 4567
+// $ java -Djava.library.path=./DynamoDBLocal_lib -jar DynamoDBLocal.jar -sharedDb -port 4567
+// you can open the shared-local-instance.db file with https://github.com/sqlitebrowser/sqlitebrowser
 
 var async = require('async');
 var AWS = require('aws-sdk');
