@@ -2,8 +2,19 @@ var expect = require('expect.js'),
   async = require('async'),
   commandBumper = require('../../lib/bumper'),
   Base = require('../../lib/bumper/base'),
-  InMemory = require('../../lib/bumper/databases/inmemory');
+  InMemory = require('../../lib/bumper/databases/dynamodb');
 
+
+// precondition: dynalite is running
+// TODO: remove aws from test later
+  var AWS = require('aws-sdk');
+  AWS.config.update({
+    region: 'us-east-1',
+    accessKeyId: 'some-id',
+    secretAccessKey: 'some-secret',
+    endpoint: 'http://localhost:4567',
+  });
+//
 describe('CommandBumper', function() {
 
   it('it should have the correct interface', function() {
@@ -77,7 +88,7 @@ describe('CommandBumper', function() {
 
     describe('with options containing a type property with the value of', function() {
 
-      var types = ['inmemory', 'mongodb', 'tingodb', 'redis'];
+      var types = ['dynamodb', /*'inmemory', 'mongodb', 'tingodb', 'redis'*/];
 
       types.forEach(function(type) {
 
@@ -138,7 +149,7 @@ describe('CommandBumper', function() {
                 bumper.connect(function (err) {
                   expect(err).not.to.be.ok();
                   done();
-                })
+                });
 
               });
 
@@ -150,7 +161,7 @@ describe('CommandBumper', function() {
 
                 bumper = commandBumper.create({ type: type });
                 bumper.once('connect', done);
-                bumper.connect()
+                bumper.connect();
 
               });
 
