@@ -42,7 +42,8 @@ async.series({
       }
     };
     client.describeTable({ TableName: params.TableName }, function (err, data) {
-      if (err || (data && data.Table && data.Table.TableStatus === 'ACTIVE')) {
+      if ((err && err.code !== 'ResourceNotFoundException') ||
+        (data && data.Table && data.Table.TableStatus === 'ACTIVE')) {
         return done();
       }
       client.createTable(params, done);
@@ -76,7 +77,8 @@ async.series({
   }
 }, function(error) {
   if(error) {
-    console.error('Local DynamoDB has a problem.', error);
+    console.error('Local DynamoDB has a problem.');
+    console.error(JSON.stringify(error, null, 2));
   } else {
     console.log('Local DynamoDB is operational.');
     console.log('Opration count: ' + queryOperationCount);
