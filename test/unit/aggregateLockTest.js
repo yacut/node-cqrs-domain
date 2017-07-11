@@ -2,8 +2,19 @@ var expect = require('expect.js'),
   async = require('async'),
   aggregatelock = require('../../lib/lock'),
   Base = require('../../lib/lock/base'),
-  InMemory = require('../../lib/lock/databases/inmemory');
+  InMemory = require('../../lib/lock/databases/dynamodb');
 
+
+// precondition: dynalite is running
+// TODO: remove aws from test later
+  var AWS = require('aws-sdk');
+  AWS.config.update({
+    region: 'us-east-1',
+    accessKeyId: 'some-id',
+    secretAccessKey: 'some-secret',
+    endpoint: 'http://localhost:4567',
+  });
+//
 describe('AggregateLock', function() {
 
   it('it should have the correct interface', function() {
@@ -77,7 +88,7 @@ describe('AggregateLock', function() {
 
     describe('with options containing a type property with the value of', function() {
 
-      var types = ['inmemory', 'mongodb', 'tingodb', 'redis'/*, 'couchdb', 'azuretable'*/];
+      var types = ['dynamodb'/*,/'inmemory', 'mongodb', 'tingodb', 'redis', 'couchdb', 'azuretable'*/];
 
       types.forEach(function(type) {
 
@@ -140,7 +151,7 @@ describe('AggregateLock', function() {
                 lock.connect(function (err) {
                   expect(err).not.to.be.ok();
                   done();
-                })
+                });
 
               });
 
@@ -152,7 +163,7 @@ describe('AggregateLock', function() {
 
                 lock = aggregatelock.create({ type: type });
                 lock.once('connect', done);
-                lock.connect()
+                lock.connect();
 
               });
 
@@ -355,8 +366,8 @@ describe('AggregateLock', function() {
                         expect(workerIds).to.be.an('array');
                         expect(workerIds.length).to.eql(0);
                         done();
-                      })
-                    })
+                      });
+                    });
 
                   });
 
@@ -373,8 +384,8 @@ describe('AggregateLock', function() {
                         expect(workerIds[0]).to.eql('workerIdFirst');
                         expect(workerIds[1]).to.eql('workerIdSecond');
                         done();
-                      })
-                    })
+                      });
+                    });
 
                   });
 
